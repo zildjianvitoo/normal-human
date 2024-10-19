@@ -11,9 +11,10 @@ async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
   try {
     Promise.all(
       emails.map((email, index) => upsertEmail(email, accountId, index)),
+      // Rawan race condition for now
     );
   } catch (error) {
-    console.log("errroorrr", error);
+    console.log("errroorrr upsert email", error);
   }
 }
 
