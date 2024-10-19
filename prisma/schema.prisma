@@ -11,9 +11,24 @@ datasource db {
 }
 
 model User {
-    id         String  @id @default(cuid())
-    email      String  @unique
+    id         String    @id @default(cuid())
+    email      String    @unique
     first_name String
     last_name  String
     imageUrl   String?
+    accounts   Account[]
+}
+
+model Account {
+    id     String @id @default(cuid())
+    userId String
+
+    accessToken String @unique
+    email       String
+    name        String
+
+    nextDeltaToken String?
+
+    user User @relation(fields: [userId], references: [id])
+    //one To Many Relation 1 User have Many Account
 }
