@@ -14,9 +14,9 @@ export async function POST(req: Request) {
   await db.user.create({
     data: {
       id,
-      email,
-      first_name: firstName,
-      last_name: lastName,
+      emailAddress: email,
+      firstName: firstName,
+      lastName: lastName,
       imageUrl: imageUrl,
     },
   });

@@ -39,7 +39,8 @@ export async function GET(req: NextRequest) {
   }
 
   const accountDetails = await getAccountDetail(token.accessToken);
-
+  console.log("token account id", token.accountId.toString());
+  console.log("acc details", accountDetails);
   await db.account.upsert({
     where: {
       id: token.accountId.toString(),
@@ -50,7 +51,7 @@ export async function GET(req: NextRequest) {
     create: {
       id: token.accountId.toString(),
       userId: userId,
-      email: accountDetails?.email!,
+      emailAddress: accountDetails?.email!,
       name: accountDetails?.name!,
       accessToken: token.accessToken,
     },

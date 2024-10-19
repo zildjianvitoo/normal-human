@@ -1,6 +1,7 @@
 // /api/initial-sync
 
 import { Account } from "@/lib/account";
+import { syncEmailsToDatabase } from "@/lib/sync-to-db";
 import { db } from "@/server/db";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -48,6 +49,10 @@ export async function POST(req: NextRequest) {
   //     },
   //   });
 
+  // Jangan lupa setting credential secret dan id di google cloud console,sm setting
+  // Di aurinkonya callbacknya ke url dia sendiri
+
+  await syncEmailsToDatabase(emails, accountId);
   console.log("Sync Completed", deltaToken);
   return NextResponse.json({ success: true }, { status: 200 });
 }
