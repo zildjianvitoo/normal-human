@@ -3,7 +3,13 @@ import type {
   SyncResponse,
   SyncUpdatedResponse,
 } from "@/types/types";
+
 import axios, { AxiosError } from "axios";
+
+interface EmailAddress {
+  name: string;
+  address: string;
+}
 
 export class Account {
   private token: string;
@@ -105,6 +111,66 @@ export class Account {
       } else {
         console.error("Error during sync", error);
       }
+    }
+  }
+  async sendEmail({
+    from,
+    subject,
+    body,
+    inReplyTo,
+    references,
+    threadId,
+    to,
+    cc,
+    bcc,
+    replyTo,
+  }: {
+    from: EmailAddress;
+    subject: string;
+    body: string;
+    inReplyTo?: string;
+    references?: string;
+    threadId?: string;
+    to: EmailAddress[];
+    cc?: EmailAddress[];
+    bcc?: EmailAddress[];
+    replyTo?: EmailAddress;
+  }) {
+    try {
+      const response = await axios.post(
+        `https://api.aurinko.io/v1/email/messages`,
+        {
+          from,
+          subject,
+          body,
+          inReplyTo,
+          references,
+          threadId,
+          to,
+          cc,
+          bcc,
+          replyTo: [replyTo],
+        },
+        {
+          params: {
+            returnIds: true,
+          },
+          headers: { Authorization: `Bearer ${this.token}` },
+        },
+      );
+
+      console.log("sendmail", response.data);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "Error sending email:",
+          JSON.stringify(error.response?.data, null, 2),
+        );
+      } else {
+        console.error("Error sending email:", error);
+      }
+      throw error;
     }
   }
 }
