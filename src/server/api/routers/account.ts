@@ -278,7 +278,6 @@ export const accountRouter = createTRPCRouter({
         ctx.auth.userId,
       );
       const account = new Account(acc.accessToken);
-      console.log("sendmail", input);
       await account.sendEmail({
         body: input.body,
         subject: input.subject,

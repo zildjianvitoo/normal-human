@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import EmailEditor from "./email-editor";
 
 import { api, type RouterOutputs } from "@/trpc/react";
@@ -27,24 +27,20 @@ function Component({
   const [threadId] = useThread();
   const { accountId } = useThreads();
 
-  const [subject, setSubject] = React.useState(
+  const [subject, setSubject] = useState(
     replyDetails.subject.startsWith("Re:")
       ? replyDetails.subject
       : `Re: ${replyDetails.subject}`,
   );
 
-  const [toValues, setToValues] = React.useState<
-    { label: string; value: string }[]
-  >(
+  const [toValues, setToValues] = useState<{ label: string; value: string }[]>(
     replyDetails.to.map((to) => ({
       label: to.address ?? to.name,
       value: to.address,
     })) || [],
   );
 
-  const [ccValues, setCcValues] = React.useState<
-    { label: string; value: string }[]
-  >(
+  const [ccValues, setCcValues] = useState<{ label: string; value: string }[]>(
     replyDetails.cc.map((cc) => ({
       label: cc.address ?? cc.name,
       value: cc.address,
@@ -58,12 +54,14 @@ function Component({
     if (!replyDetails.subject.startsWith("Re:")) {
       setSubject(`Re: ${replyDetails.subject}`);
     }
+
     setToValues(
       replyDetails.to.map((to) => ({
         label: to.address ?? to.name,
         value: to.address,
       })),
     );
+
     setCcValues(
       replyDetails.cc.map((cc) => ({
         label: cc.address ?? cc.name,
@@ -73,8 +71,8 @@ function Component({
   }, [replyDetails, threadId]);
 
   const handleSend = async (value: string) => {
-    console.log(value);
     if (!replyDetails) return;
+
     sendEmail.mutate(
       {
         accountId,

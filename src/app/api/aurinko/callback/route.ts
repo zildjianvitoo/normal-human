@@ -9,7 +9,7 @@ import axios from "axios";
 
 export async function GET(req: NextRequest) {
   const { userId } = await auth();
-  console.log("userId", userId);
+
   if (!userId) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
@@ -39,8 +39,7 @@ export async function GET(req: NextRequest) {
   }
 
   const accountDetails = await getAccountDetail(token.accessToken);
-  console.log("token account id", token.accountId.toString());
-  console.log("acc details", accountDetails);
+
   await db.account.upsert({
     where: {
       id: token.accountId.toString(),

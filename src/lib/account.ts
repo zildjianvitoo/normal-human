@@ -137,7 +137,7 @@ export class Account {
     replyTo?: EmailAddress;
   }) {
     try {
-      const response = await axios.post(
+      const { data } = await axios.post(
         `https://api.aurinko.io/v1/email/messages`,
         {
           from,
@@ -159,10 +159,10 @@ export class Account {
         },
       );
 
-      console.log("sendmail", response.data);
-      return response.data;
+      console.log("sendmail", data);
+      return data;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
+      if (error instanceof AxiosError) {
         console.error(
           "Error sending email:",
           JSON.stringify(error.response?.data, null, 2),

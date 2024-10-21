@@ -26,14 +26,18 @@ interface Props {
   isComposing?: boolean;
 }
 
-const AIComposeButton = (props: Props) => {
+export function AIComposeButton(props: Props) {
   const [prompt, setPrompt] = React.useState("");
   const [open, setOpen] = React.useState(false);
+
   const { account, threads } = useThreads();
   const [threadId] = useThread();
+
   const thread = threads?.find((t) => t.id === threadId);
+
   const aiGenerate = async (prompt: string) => {
     let context: string | undefined = "";
+
     if (!props.isComposing) {
       context = thread?.emails
         .map(
@@ -88,6 +92,6 @@ const AIComposeButton = (props: Props) => {
       </DialogContent>
     </Dialog>
   );
-};
+}
 
 export default AIComposeButton;

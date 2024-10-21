@@ -1,5 +1,7 @@
 import ThemeToggle from "@/components/theme-toggle";
+import { UserButton } from "@clerk/nextjs";
 import dynamic from "next/dynamic";
+import ComposeButton from "./compose-button";
 
 const Mail = dynamic(
   () => {
@@ -14,7 +16,11 @@ export default function PageMail() {
   return (
     <>
       <div className="absolute bottom-4 left-4">
-        <ThemeToggle />
+        <div className="flex items-center gap-2">
+          <UserButton />
+          <ThemeToggle />
+          <ComposeButton />
+        </div>
       </div>
       <Mail
         defaultLayout={[20, 30, 48]}

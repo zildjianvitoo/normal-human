@@ -71,7 +71,7 @@ const EmailEditor = ({
   const customText = Text.extend({
     addKeyboardShortcuts() {
       return {
-        "Meta-j": () => {
+        "Alt-j": () => {
           aiGenerate(this.editor.getText());
           return true;
         },
@@ -92,7 +92,7 @@ const EmailEditor = ({
     },
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (typeof window === "undefined") return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -180,7 +180,7 @@ const EmailEditor = ({
         <span className="text-sm">
           Tip: Press{" "}
           <kbd className="rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs font-semibold text-gray-800">
-            Cmd + J
+            ALT + J
           </kbd>{" "}
           for AI autocomplete
         </span>

@@ -15,6 +15,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@ai-sdk/google": "^0.0.52",
     "@ai-sdk/openai": "^0.0.68",
     "@clerk/nextjs": "^5.7.3",
     "@formkit/auto-animate": "^0.8.2",
@@ -73,6 +74,7 @@
     "tailwindcss-animate": "^1.0.7",
     "turndown": "^7.2.0",
     "usehooks-ts": "^3.1.0",
+    "vaul": "^1.1.0",
     "zod": "^3.23.3"
   },
   "devDependencies": {
