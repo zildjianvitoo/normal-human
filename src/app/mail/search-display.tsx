@@ -8,7 +8,7 @@ import { useDebounceValue, useLocalStorage } from "usehooks-ts";
 
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { useThread } from "@/hooks/use.thread";
+import { useThread } from "@/hooks/use-thread";
 
 const SearchDisplay = () => {
   const [searchValue, setSearchValue] = useAtom(searchValueAtom);

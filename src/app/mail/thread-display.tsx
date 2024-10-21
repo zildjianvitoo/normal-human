@@ -43,7 +43,7 @@ import { isSearchingAtom } from "./search-bar";
 import { useLocalStorage } from "usehooks-ts";
 import ReplyBox from "./reply-box";
 import { useThreads } from "@/hooks/use-threads";
-import { useThread } from "@/hooks/use.thread";
+import { useThread } from "@/hooks/use-thread";
 
 export function ThreadDisplay() {
   const [threadId, setThreadId] = useThread();

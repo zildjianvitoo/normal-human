@@ -13,7 +13,7 @@ import { useLocalStorage } from "usehooks-ts";
 
 import { useAtom } from "jotai";
 
-import { useThread } from "@/hooks/use.thread";
+import { useThread } from "@/hooks/use-thread";
 import { isSearchingAtom } from "@/app/mail/search-bar";
 import useThemeSwitching from "@/hooks/use-theme-swtiching";
 import useAccountSwitching from "@/hooks/use-account-switching";

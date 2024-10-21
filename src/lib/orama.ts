@@ -10,7 +10,7 @@ import { persist, restore } from "@orama/plugin-data-persistence";
 import { db } from "@/server/db";
 import { getEmbeddings } from "@/lib/embeddings";
 
-export class OramaManager {
+export class OramaClient {
   // @ts-ignore
   private orama: AnyOrama;
   private accountId: string;
@@ -22,13 +22,13 @@ export class OramaManager {
   async initialize() {
     const account = await db.account.findUnique({
       where: { id: this.accountId },
-      select: { binaryIndex: true },
+      select: { oramaIndex: true },
     });
 
     if (!account) throw new Error("Account not found");
 
-    if (account.binaryIndex) {
-      this.orama = await restore("json", account.binaryIndex as any);
+    if (account.oramaIndex) {
+      this.orama = await restore("json", account.oramaIndex as any);
     } else {
       this.orama = await create({
         schema: {
@@ -38,7 +38,7 @@ export class OramaManager {
           from: "string",
           to: "string[]",
           sentAt: "string",
-          embeddings: "vector[1536]",
+          // embeddings: "vector[1536]",
           threadId: "string",
         },
       });
@@ -86,15 +86,15 @@ export class OramaManager {
     const index = await persist(this.orama, "json");
     await db.account.update({
       where: { id: this.accountId },
-      data: { binaryIndex: index as Buffer },
+      data: { oramaIndex: index as Buffer },
     });
   }
 }
 
 // Usage example:
 async function main() {
-  const oramaManager = new OramaManager("67358");
-  await oramaManager.initialize();
+  const oramaClient = new OramaClient("67358");
+  await oramaClient.initialize();
 
   // Insert a document
   // const emails = await db.email.findMany({
@@ -124,7 +124,7 @@ async function main() {
   // }))
 
   // Search
-  const searchResults = await oramaManager.search({
+  const searchResults = await oramaClient.search({
     term: "cascading",
   });
 

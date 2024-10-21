@@ -40,14 +40,14 @@ export async function POST(req: NextRequest) {
   const { emails, deltaToken } = response;
   console.log(emails);
 
-  //   await db.account.update({
-  //     where: {
-  //       id: accountId,
-  //     },
-  //     data: {
-  //       nextDeltaToken: deltaToken,
-  //     },
-  //   });
+  await db.account.update({
+    where: {
+      id: accountId,
+    },
+    data: {
+      nextDeltaToken: deltaToken,
+    },
+  });
 
   // Jangan lupa setting credential secret dan id di google cloud console,sm setting
   // Di aurinkonya callbacknya ke url dia sendiri

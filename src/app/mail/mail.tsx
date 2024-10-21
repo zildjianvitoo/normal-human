@@ -13,6 +13,7 @@ import AccountSwitcher from "./account-switcher";
 import SideBar from "./sidebar";
 import { ThreadList } from "./thread-list";
 import { ThreadDisplay } from "./thread-display";
+import SearchBar from "./search-bar";
 
 interface Props {
   defaultLayout: number[] | undefined;
@@ -90,7 +91,7 @@ export default function Mail({
               </TabsList>
             </div>
             <Separator />
-            {/* Search Bar */}
+            <SearchBar />
             <TabsContent value="inbox">
               <ThreadList />
             </TabsContent>

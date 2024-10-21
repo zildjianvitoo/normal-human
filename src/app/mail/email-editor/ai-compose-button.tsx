@@ -19,7 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { turndown } from "@/lib/turndown";
 import { useThreads } from "@/hooks/use-threads";
-import { useThread } from "@/hooks/use.thread";
+import { useThread } from "@/hooks/use-thread";
 
 interface Props {
   onGenerate: (value: string) => void;

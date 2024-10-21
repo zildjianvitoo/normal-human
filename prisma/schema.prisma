@@ -23,7 +23,7 @@ model Account {
     id     String @id @default(cuid())
     userId String
 
-    binaryIndex  Json?
+    oramaIndex   Json?
     accessToken  String @unique
     emailAddress String
     name         String

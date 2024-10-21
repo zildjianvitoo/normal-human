@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Loader2, Search, X } from "lucide-react";
-import React from "react";
+import { useEffect, useRef } from "react";
 
 import { atom, useAtom } from "jotai";
 import { useThreads } from "@/hooks/use-threads";
@@ -14,13 +14,16 @@ const SearchBar = () => {
   const { isFetching } = useThreads();
   const [searchValue, setSearchValue] = useAtom(searchValueAtom);
   const [isSearching, setIsSearching] = useAtom(isSearchingAtom);
-  const ref = React.useRef<HTMLInputElement>(null);
+
+  const ref = useRef<HTMLInputElement>(null);
+
   const handleBlur = () => {
     if (!!searchValue) return;
     setIsSearching(false);
   };
+
   // add escape key to close
-  React.useEffect(() => {
+  useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         handleBlur();

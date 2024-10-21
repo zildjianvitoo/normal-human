@@ -3,16 +3,27 @@ import { EmailAttachment, EmailMessage } from "@/types/types";
 
 import { EmailAddress } from "@prisma/client";
 import pLimit from "p-limit";
+import { OramaClient } from "./orama";
 
 async function syncEmailsToDatabase(emails: EmailMessage[], accountId: string) {
   console.log("Attempt sync email to db", emails.length);
   const limit = pLimit(10);
 
+  const orama = new OramaClient(accountId);
+  await orama.initialize();
+
   try {
-    Promise.all(
-      emails.map((email, index) => upsertEmail(email, accountId, index)),
-      // Rawan race condition for now
-    );
+    for (const email of emails) {
+      orama.insert({
+        subject: email.subject,
+        body: email.body,
+        from: email.from.address,
+        to: email.to.map((t) => t.address),
+        sentAt: email.sentAt.toLocaleString(),
+        threadId: email.threadId,
+      });
+      upsertEmail(email, accountId, 0);
+    }
   } catch (error) {
     console.log("errroorrr upsert email", error);
   }

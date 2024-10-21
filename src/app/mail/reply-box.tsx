@@ -4,7 +4,7 @@ import EmailEditor from "./email-editor";
 
 import { api, type RouterOutputs } from "@/trpc/react";
 import { toast } from "sonner";
-import { useThread } from "@/hooks/use.thread";
+import { useThread } from "@/hooks/use-thread";
 import { useThreads } from "@/hooks/use-threads";
 
 function ReplyBox() {

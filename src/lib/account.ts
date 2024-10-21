@@ -1,3 +1,4 @@
+import { db } from "@/server/db";
 import type {
   EmailMessage,
   SyncResponse,
@@ -5,6 +6,7 @@ import type {
 } from "@/types/types";
 
 import axios, { AxiosError } from "axios";
+import { syncEmailsToDatabase } from "./sync-to-db";
 
 interface EmailAddress {
   name: string;
@@ -113,6 +115,7 @@ export class Account {
       }
     }
   }
+
   async sendEmail({
     from,
     subject,
@@ -172,5 +175,56 @@ export class Account {
       }
       throw error;
     }
+  }
+
+  async syncEmails() {
+    const account = await db.account.findUnique({
+      where: {
+        accessToken: this.token,
+      },
+    });
+
+    if (!account) throw new Error("Invalid token");
+
+    if (!account.nextDeltaToken) throw new Error("No delta token");
+
+    let response = await this.getUpdatedEmail({
+      deltaToken: account.nextDeltaToken,
+    });
+
+    let allEmails: EmailMessage[] = response.records;
+    let storedDeltaToken = account.nextDeltaToken;
+
+    if (response.nextDeltaToken) {
+      storedDeltaToken = response.nextDeltaToken;
+    }
+
+    while (response.nextPageToken) {
+      response = await this.getUpdatedEmail({
+        pageToken: response.nextPageToken,
+      });
+      allEmails = allEmails.concat(response.records);
+      if (response.nextDeltaToken) {
+        storedDeltaToken = response.nextDeltaToken;
+      }
+    }
+
+    if (!response) throw new Error("Failed to sync emails");
+
+    try {
+      await syncEmailsToDatabase(allEmails, account.id);
+    } catch (error) {
+      console.log("error", error);
+    }
+
+    // console.log('syncEmails', response)
+    await db.account.update({
+      where: {
+        id: account.id,
+      },
+      data: {
+        nextDeltaToken: storedDeltaToken,
+      },
+    });
   }
 }

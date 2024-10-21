@@ -12,7 +12,7 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 import { format } from "date-fns";
 import { useThreads } from "@/hooks/use-threads";
-import { useThread } from "@/hooks/use.thread";
+import { useThread } from "@/hooks/use-thread";
 
 export function ThreadList() {
   const { threads, isFetching } = useThreads();
