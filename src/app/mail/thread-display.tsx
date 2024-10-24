@@ -44,6 +44,7 @@ import { useLocalStorage } from "usehooks-ts";
 import ReplyBox from "./reply-box";
 import { useThreads } from "@/hooks/use-threads";
 import { useThread } from "@/hooks/use-thread";
+import SearchDisplay from "./search-display";
 
 export function ThreadDisplay() {
   const [threadId, setThreadId] = useThread();
@@ -200,7 +201,9 @@ export function ThreadDisplay() {
         </DropdownMenu>
       </div>
       <Separator />
-      {isSearching ? null : ( // <SearchDisplay />
+      {isSearching ? (
+        <SearchDisplay />
+      ) : (
         <>
           {thread ? (
             <div className="flex flex-1 flex-col overflow-scroll">

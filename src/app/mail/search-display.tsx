@@ -1,7 +1,7 @@
 "use client";
 import DOMPurify from "dompurify";
 import { useAtom } from "jotai";
-import React from "react";
+import { useEffect } from "react";
 import { isSearchingAtom, searchValueAtom } from "./search-bar";
 import { api } from "@/trpc/react";
 import { useDebounceValue, useLocalStorage } from "usehooks-ts";
@@ -9,27 +9,31 @@ import { useDebounceValue, useLocalStorage } from "usehooks-ts";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useThread } from "@/hooks/use-thread";
+import { useThreads } from "@/hooks/use-threads";
 
-const SearchDisplay = () => {
+export function SearchDisplay() {
   const [searchValue, setSearchValue] = useAtom(searchValueAtom);
   const [isSearching, setIsSearching] = useAtom(isSearchingAtom);
   const [_, setThreadId] = useThread();
-  const search = api.search.search.useMutation();
+  const search = api.account.searchEmails.useMutation();
 
   const [debouncedSearch] = useDebounceValue(searchValue, 500);
-  const [accountId, setAccountId] = useLocalStorage("accountId", "");
+  const { accountId } = useThreads();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!debouncedSearch || !accountId) return;
     console.log({ accountId, debouncedSearch });
     search.mutate({ accountId, query: debouncedSearch });
+    console.log(search);
   }, [debouncedSearch, accountId]);
 
   return (
     <div className="max-h-[calc(100vh-50px)] overflow-y-scroll p-4">
       <div className="mb-4 flex items-center gap-2">
         <h2 className="text-sm text-gray-600 dark:text-gray-400">
-          Your search for "{searchValue}" came back with...
+          Your search for {'"'}
+          {searchValue}
+          {'"'} came back with...
         </h2>
         {search.isPending && (
           <Loader2 className="size-4 animate-spin text-gray-400" />
@@ -71,6 +75,6 @@ const SearchDisplay = () => {
       )}
     </div>
   );
-};
+}
 
 export default SearchDisplay;

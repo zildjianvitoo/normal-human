@@ -19,6 +19,7 @@
     "@ai-sdk/openai": "^0.0.68",
     "@clerk/nextjs": "^5.7.3",
     "@formkit/auto-animate": "^0.8.2",
+    "@google/generative-ai": "^0.21.0",
     "@orama/orama": "^3.0.1",
     "@orama/plugin-data-persistence": "^3.0.1",
     "@prisma/client": "^5.14.0",

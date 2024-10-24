@@ -19,36 +19,45 @@ export class OramaClient {
     this.accountId = accountId;
   }
 
+  async saveIndex() {
+    try {
+      const index = await persist(this.orama, "json");
+
+      await db.account.update({
+        where: { id: this.accountId },
+        data: { oramaIndex: index },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async initialize() {
     const account = await db.account.findUnique({
       where: { id: this.accountId },
-      select: { oramaIndex: true },
     });
 
-    if (!account) throw new Error("Account not found");
+    if (!account) {
+      throw new Error("Account not found");
+    }
 
     if (account.oramaIndex) {
       this.orama = await restore("json", account.oramaIndex as any);
     } else {
       this.orama = await create({
         schema: {
-          title: "string",
+          subject: "string",
           body: "string",
           rawBody: "string",
           from: "string",
           to: "string[]",
           sentAt: "string",
-          // embeddings: "vector[1536]",
+          embeddings: "vector[768]",
           threadId: "string",
         },
       });
       await this.saveIndex();
     }
-  }
-
-  async insert(document: any) {
-    await insert(this.orama, document);
-    await this.saveIndex();
   }
 
   async vectorSearch({
@@ -76,59 +85,19 @@ export class OramaClient {
     // console.log(results.hits.map(hit => hit.document))
     return results;
   }
+
   async search({ term }: { term: string }) {
     return await search(this.orama, {
       term: term,
     });
   }
 
-  async saveIndex() {
-    const index = await persist(this.orama, "json");
-    await db.account.update({
-      where: { id: this.accountId },
-      data: { oramaIndex: index as Buffer },
-    });
+  async insert(document: any) {
+    await insert(this.orama, document);
+    await this.saveIndex();
   }
 }
 
-// Usage example:
-async function main() {
-  const oramaClient = new OramaClient("67358");
-  await oramaClient.initialize();
-
-  // Insert a document
-  // const emails = await db.email.findMany({
-  //     where: {
-  //         thread: { accountId: '67358' }
-  //     },
-  //     select: {
-  //         subject: true,
-  //         bodySnippet: true,
-  //         from: { select: { address: true, name: true } },
-  //         to: { select: { address: true, name: true } },
-  //         sentAt: true,
-  //     },
-  //     take: 100
-  // })
-  // await Promise.all(emails.map(async email => {
-  //     // const bodyEmbedding = await getEmbeddings(email.bodySnippet || '');
-  //     // console.log(bodyEmbedding)
-  //     await oramaManager.insert({
-  //         title: email.subject,
-  //         body: email.bodySnippet,
-  //         from: `${email.from.name} <${email.from.address}>`,
-  //         to: email.to.map(t => `${t.name} <${t.address}>`),
-  //         sentAt: email.sentAt.getTime(),
-  //         // bodyEmbedding: bodyEmbedding,
-  //     })
-  // }))
-
-  // Search
-  const searchResults = await oramaClient.search({
-    term: "cascading",
-  });
-
-  console.log(searchResults.hits.map((hit) => hit.document));
-}
+// Usage example
 
 // main().catch(console.error);

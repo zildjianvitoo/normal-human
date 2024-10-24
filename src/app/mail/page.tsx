@@ -23,7 +23,7 @@ export default function PageMail() {
         </div>
       </div>
       <Mail
-        defaultLayout={[20, 30, 48]}
+        defaultLayout={[23, 30, 47]}
         defaultCollapsed={false}
         navCollapsedSize={4}
       ></Mail>

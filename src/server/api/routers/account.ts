@@ -4,6 +4,7 @@ import { db } from "@/server/db";
 import { Prisma } from "@prisma/client";
 import { emailAddressSchema } from "@/types/types";
 import { Account } from "@/lib/account";
+import { OramaClient } from "@/lib/orama";
 
 export const authorizedAccountAccess = async (
   accountId: string,
@@ -308,5 +309,25 @@ export const accountRouter = createTRPCRouter({
       if (!account) throw new Error("Invalid token");
       const acc = new Account(account.accessToken);
       acc.syncEmails();
+    }),
+
+  searchEmails: privateProcedure
+    .input(
+      z.object({
+        accountId: z.string(),
+        query: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const account = await authorizedAccountAccess(
+        input.accountId,
+        ctx.auth.userId,
+      );
+
+      const orama = new OramaClient(account.id);
+      await orama.initialize();
+      const results = await orama.search({ term: input.query });
+
+      return results;
     }),
 });

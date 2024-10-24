@@ -18,7 +18,7 @@ const SearchBar = () => {
   const ref = useRef<HTMLInputElement>(null);
 
   const handleBlur = () => {
-    if (!!searchValue) return;
+    if (searchValue !== "") return;
     setIsSearching(false);
   };
 
